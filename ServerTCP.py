@@ -30,21 +30,13 @@ def handle_messages(cliente):
         try:
             MENSAGEM = cliente.recv(TAMANHO_BUFFER)
             broadcast(MENSAGEM,cliente)
-            if MENSAGEM == "QUIT":
-                index = clientes.index(cliente)
-                clientes.remove(cliente)
-                cliente.close()
-                username = usernames[index]
-                broadcast(f"Chatbot: {username} disconnected".encode('utf-8'), cliente)
-                usernames.remove(username)
-                break
 
         except:
             index = clientes.index(cliente)
             clientes.remove(cliente)
             cliente.close()
             username = usernames[index]
-            broadcast(f"Chatbot: {username} disconnected".encode('utf-8'), cliente)
+            broadcast(f"Chatbot: {username} desconectado".encode('utf-8'), cliente)
             
             usernames.remove(username)
             
@@ -53,14 +45,14 @@ def handle_messages(cliente):
 def receive_connections():
     while True:
         cliente, address = servidor.accept()
-        cliente.send("@username".encode("utf-8"))
-        username = cliente.recv(TAMANHO_BUFFER).decode("utf-8")
+        cliente.send("@username".encode('utf-8'))
+        username = cliente.recv(TAMANHO_BUFFER).decode('utf-8')
         clientes.append(cliente)
         usernames.append(username)
-        print(f"{username} is connected with {str(address)}")
-        MENSAGEM = f"ChatBot: {username} joined the chat!".encode("utf-8")
+        print(f"{username} esta conectado com {str(address)}")
+        MENSAGEM = f"ChatBot: {username} entrou no chat!".encode('utf-8')
         broadcast(MENSAGEM,cliente)
-        cliente.send("Connected to server".encode("utf-8"))
+        cliente.send("Conectado ao server".encode('utf-8'))
         
         thread = threading.Thread(target=handle_messages, args=(cliente,))
         thread.start()
