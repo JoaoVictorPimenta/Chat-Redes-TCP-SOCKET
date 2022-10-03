@@ -12,26 +12,20 @@ cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Conecta ao servidor em IP e porta especifica 
 cliente.connect((TCP_IP, TCP_PORTA))
 
-done = False
-
 def receive_messages():
-    while not done:
+    while True:
         try:
             MENSAGEM = cliente.recv(TAMANHO_BUFFER).decode('utf-8')
 
             if MENSAGEM == "@username":
-                cliente.send(username.encode('utf-8'))
-            
-            elif MENSAGEM == "QUIT":
-                cliente.close 
-                done = True       
+                cliente.send(username.encode('utf-8'))   
             
             else:
                 print(MENSAGEM)
         except:
             print("Ocorreu um erro")
             cliente.close
-            done = True
+            break
 
 def write_messages():
     while True:
