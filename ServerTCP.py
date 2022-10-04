@@ -37,7 +37,8 @@ def handle_messages(cliente):
                 clientes.remove(cliente)
                 usernames.remove(username)
                 cliente.close()
-                break
+            
+            break
                 
 
         except:
