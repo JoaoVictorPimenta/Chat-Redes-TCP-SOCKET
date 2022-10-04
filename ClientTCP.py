@@ -12,7 +12,7 @@ cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Conecta ao servidor em IP e porta especifica 
 cliente.connect((TCP_IP, TCP_PORTA))
 
-def receive_messages():
+def receber_mensagens():
     while True:
         try:
             MENSAGEM = cliente.recv(TAMANHO_BUFFER).decode('utf-8')
@@ -27,16 +27,16 @@ def receive_messages():
             cliente.close
             break
 
-def write_messages():
+def escrever_mensagens():
     while True:
         MENSAGEM = f"{username}: {input('')}"
         cliente.send(MENSAGEM.encode('utf-8'))
 
-receive_thread = threading.Thread(target=receive_messages)
-receive_thread.start()
+receber_thread = threading.Thread(target=receber_mensagens)
+receber_thread.start()
 
-write_thread = threading.Thread(target=write_messages)
-write_thread.start()
+escrever_thread = threading.Thread(target=escrever_mensagens)
+escrever_thread.start()
 
 
 

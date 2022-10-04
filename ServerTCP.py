@@ -21,16 +21,16 @@ print(f"Servidor {TCP_IP} disponivel na porta {TCP_PORTA} e escutando.....")
 clientes = []
 usernames = []
 
-def broadcast(MENSAGEM, _cliente):
+def transmitir(MENSAGEM, _cliente):
     for cliente in clientes:
         if cliente != _cliente:
             cliente.send(MENSAGEM)
 
-def handle_messages(cliente):
+def lidar_com_mensagens(cliente):
     while True:
         try: 
             MENSAGEM = cliente.recv(TAMANHO_BUFFER)
-            broadcast(MENSAGEM,cliente)
+            transmitir(MENSAGEM,cliente)
             if MENSAGEM == "QUIT": 
                 index = clientes.index(cliente)
                 username = usernames[index]       
@@ -51,7 +51,7 @@ def handle_messages(cliente):
             
             break
 
-def receive_connections():
+def receber_conexoes():
     while True:
         cliente, address = servidor.accept()
         cliente.send("@username".encode('utf-8'))
@@ -60,10 +60,10 @@ def receive_connections():
         usernames.append(username)
         print(f"{username} esta conectado com {str(address)}")
         MENSAGEM = f"ChatBot: {username} entrou no chat!".encode('utf-8')
-        broadcast(MENSAGEM,cliente)
+        transmitir(MENSAGEM,cliente)
         cliente.send("Conectado ao servidor".encode('utf-8'))
         
-        thread = threading.Thread(target=handle_messages, args=(cliente,))
+        thread = threading.Thread(target=lidar_com_mensagens, args=(cliente,))
         thread.start()
-receive_connections()
+receber_conexoes()
 servidor.close()
