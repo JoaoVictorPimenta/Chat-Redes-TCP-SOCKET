@@ -1,3 +1,5 @@
+#Claudia Fiorentino Andrade - 42005302
+#João Victor Pimenta - 42005876
 import socket
 import threading #importa modulo socket
 
