@@ -1,3 +1,4 @@
+from http import client
 import socket
 import threading #importa modulo socket
  
@@ -15,7 +16,7 @@ servidor.bind((TCP_IP, TCP_PORTA))
 #Define o limite de conexões. 
 servidor.listen()
 
-print(f"Servidor {TCP_IP} dispoivel na porta {TCP_PORTA} e escutando.....") 
+print(f"Servidor {TCP_IP} disponivel na porta {TCP_PORTA} e escutando.....") 
 
 clientes = []
 usernames = []
@@ -27,58 +28,41 @@ def broadcast(MENSAGEM, _cliente):
 
 def handle_messages(cliente):
     while True:
-        try:
+        try: 
             MENSAGEM = cliente.recv(TAMANHO_BUFFER)
             broadcast(MENSAGEM,cliente)
-            if MENSAGEM == "QUIT":
+            if MENSAGEM == "QUIT": 
                 index = clientes.index(cliente)
+                username = usernames[index]       
                 clientes.remove(cliente)
-                cliente.close()
-                username = usernames[index]
-                broadcast(f"Chatbot: {username} disconnected".encode('utf-8'), cliente)
                 usernames.remove(username)
-                break
+                cliente.close()
+            break
+                
 
         except:
             index = clientes.index(cliente)
+            username = usernames[index]      
             clientes.remove(cliente)
-            cliente.close()
-            username = usernames[index]
-            broadcast(f"Chatbot: {username} disconnected".encode('utf-8'), cliente)
-            
             usernames.remove(username)
+            cliente.close()
+            
             
             break
 
 def receive_connections():
     while True:
         cliente, address = servidor.accept()
-        cliente.send("@username".encode("utf-8"))
-        username = cliente.recv(TAMANHO_BUFFER).decode("utf-8")
+        cliente.send("@username".encode('utf-8'))
+        username = cliente.recv(TAMANHO_BUFFER).decode('utf-8')
         clientes.append(cliente)
         usernames.append(username)
-        print(f"{username} is connected with {str(address)}")
-        MENSAGEM = f"ChatBot: {username} joined the chat!".encode("utf-8")
+        print(f"{username} esta conectado com {str(address)}")
+        MENSAGEM = f"ChatBot: {username} entrou no chat!".encode('utf-8')
         broadcast(MENSAGEM,cliente)
-        cliente.send("Connected to server".encode("utf-8"))
+        cliente.send("Conectado ao servidor".encode('utf-8'))
+        handle_messages(cliente)
         
-        thread = threading.Thread(target=handle_messages, args=(cliente,))
-        thread.start()
 
 receive_connections()
-
-
-
-
-
-
-# # Aceita conexão 
-# conn, addr = servidor.accept()
-# print ('Endereço conectado:', addr)
-# while 1:
-#     #dados retidados da mensagem recebida
-#     data = conn.recv(TAMANHO_BUFFER)
-#     if data: 
-#         print ("Mensagem recebida:", data)  
-#         conn.send(data.upper())  # envia dados recebidos em letra maiuscula 
-
+servidor.close()

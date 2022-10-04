@@ -12,19 +12,13 @@ cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Conecta ao servidor em IP e porta especifica 
 cliente.connect((TCP_IP, TCP_PORTA))
 
-# MENSAGEM  = input("Digite sua mensagem: ")
-
 def receive_messages():
     while True:
         try:
-            MENSAGEM = cliente.recv(TAMANHO_BUFFER).decode("utf-8")
+            MENSAGEM = cliente.recv(TAMANHO_BUFFER).decode('utf-8')
 
             if MENSAGEM == "@username":
-                cliente.send(username.encode("utf-8"))
-            
-            elif MENSAGEM == "QUIT":
-                cliente.close 
-                break       
+                cliente.send(username.encode('utf-8'))   
             
             else:
                 print(MENSAGEM)
@@ -36,37 +30,9 @@ def receive_messages():
 def write_messages():
     while True:
         MENSAGEM = f"{username}: {input('')}"
-        cliente.send(MENSAGEM.encode("utf-8"))
+        cliente.send(MENSAGEM.encode('utf-8'))
 
-receive_thread = threading.Thread(target=receive_messages)
-receive_thread.start()
+receive_messages()
 
-write_thread = threading.Thread(target=write_messages)
-write_thread.start()
+write_messages()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # envia mensagem para servidor 
-# cliente.send(MENSAGEM.encode('UTF-8'))
-
-# # recebe dados do servidor 
-# data, addr = cliente.recvfrom(1024)
-
-# # fecha conexão com servidor
-# cliente.close()
-
-# print ("received data:", data)
